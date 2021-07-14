@@ -36,6 +36,22 @@ module.exports = {
       warnings: false,
       errors: true
     },
+    // 配置服务器反向代理
+    proxy:{
+
+      // 当地址中有 /api 的时候就会触发代理机制
+      "/api": {
+
+        // 要代理的服务器地址
+        target: "http://ihrm-java.itheima.net/",
+        // 是否跨域
+        changeOrigin: true,
+        // 重写路径，就是不想要 /api 的时候就重写
+        // pathRewrite: {}
+
+      }
+
+    },
     // 注释掉这个，不然会报错
     before: require('./mock/mock-server.js')
   },

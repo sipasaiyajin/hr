@@ -69,7 +69,7 @@ export default {
     }
   }
 
-  // 设置Logo图片的大小
+  // 给logo设置小图
   &.collapse {
     .sidebar-logo {
       margin-right: 0px;

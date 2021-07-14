@@ -5,29 +5,29 @@
     <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
     
     <!-- 这是左侧的面包屑导航组件 -->
-    <breadcrumb class="breadcrumb-container" />
+    <!-- <breadcrumb class="breadcrumb-container" /> -->
+
+    <div class="app-breadcrumb">
+      江苏传智播客教育科技股份有限公司
+      <span class="breadBtn">体验版</span>
+    </div>
 
     <!-- 这是右侧的用户模块 -->
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img src="@/assets/common/bigUserHeader.png" class="user-avatar">
+          <span class="name">管理员</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
             <el-dropdown-item>
-              Home
+              首页
             </el-dropdown-item>
           </router-link>
-          <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
-            <el-dropdown-item>Github</el-dropdown-item>
-          </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
-            <el-dropdown-item>Docs</el-dropdown-item>
-          </a>
           <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">Log Out</span>
+            <span style="display:block;">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -70,7 +70,8 @@ export default {
   height: 50px;
   overflow: hidden;
   position: relative;
-  background: #fff;
+  // background: #fff;
+  background-image: -webkit-linear-gradient(left, #3d6df8, #5b8cff);
   box-shadow: 0 1px 4px rgba(0,21,41,.08);
 
   .hamburger-container {
@@ -86,8 +87,29 @@ export default {
     }
   }
 
+  // 这是头部导的样式
   .breadcrumb-container {
     float: left;
+  }
+
+  // 这是新的头部导航
+  .app-breadcrumb {
+    display: inline-block;
+    font-size: 18px;
+    line-height: 50px;
+    margin-left: 10px;
+    color: #ffffff;
+    cursor: text;
+    .breadBtn {
+      background: #84a9fe;
+      font-size: 14px;
+      padding: 0 10px;
+      display: inline-block;
+      height: 30px;
+      line-height: 30px;
+      border-radius: 10px;
+      margin-left: 15px;
+    }
   }
 
   .right-menu {
@@ -117,6 +139,7 @@ export default {
       }
     }
 
+    // 右侧用户容器样式
     .avatar-container {
       margin-right: 30px;
 
@@ -124,11 +147,26 @@ export default {
         margin-top: 5px;
         position: relative;
 
+        // 这是用户组件样式
         .user-avatar {
           cursor: pointer;
           width: 40px;
           height: 40px;
           border-radius: 10px;
+          // 新添加一个样式，让文字可以居中
+          vertical-align: middle;
+        }
+
+        // 这是文字样式
+        .name {
+          color: #fff;
+          vertical-align: middle;
+          margin-left:5px;
+        }
+
+        // 
+        .user-dropdown {
+          color: #fff;
         }
 
         .el-icon-caret-bottom {

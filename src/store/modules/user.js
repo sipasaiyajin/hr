@@ -1,110 +1,68 @@
-// export default{
+import {getToken, setToken, removeToken} from '@/utils/auth'
+import { login } from '@/api/user'
 
-//   namespaced: true,
-//   state: {},
-//   mutations: {},
-//   actions: {}
+// 放置状态
+// 数据持久化要和 浏览器缓存 进行结合
+const state = {
 
-// }
+  // token 为共享状态，默认值为 null
+  token: getToken() // 一初始化 vuex 的时候，就先从缓存中读取
 
-
-import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
-import { resetRouter } from '@/router'
-
-// 用户信息模块
-// 这是对 user 的一个操作
-const getDefaultState = () => {
-  return {
-    token: getToken(),
-    name: '小老弟',
-    avatar: ''
-  }
 }
-
-const state = getDefaultState()
 
 const mutations = {
-  RESET_STATE: (state) => {
-    Object.assign(state, getDefaultState())
-  },
-  SET_TOKEN: (state, token) => {
+
+  // 第一个参数是 上下文中的 state
+  // 第二个参数就是载荷，也就是要修改的值
+  setToken(state, token){
+
+    // 设置 vuex中的值
     state.token = token
+    // 将最新的token也同步给缓存
+    setToken(token)
+
   },
-  SET_NAME: (state, name) => {
-    state.name = name
-  },
-  SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
+  // 删除token
+  removeToken(state){
+
+    // 将 state中的 token 设置为 null
+    state.token = null
+    // 将缓存也置空
+    removeToken()
+
   }
+
 }
 
+// 登录的方法
 const actions = {
-  // user login
-  login({ commit }, userInfo) {
-    const { username, password } = userInfo
-    return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
 
-  // get user info
-  getInfo({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { data } = response
+  // data 就是 调用这个方法要传入的 用户名 和 密码
+  async login({commit}, data){
 
-        if (!data) {
-          return reject('Verification failed, please Login again.')
-        }
+    // 调用 api 接口
+    // 这个result 已经在响应拦截器那里做过处理了，返回的就是data
+    const result = await login(data)
 
-        const { name, avatar } = data
+    // 将返回的 token 保存到 state中
+    // 调用 mutations 中的 setToken 方法
+    // 然后将 result.data.data 这个值传给这个方法
+    // 保存到缓存中
+    commit("setToken", result)
 
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        resolve(data)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
+    
 
-  // user logout
-  logout({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        removeToken() // must remove  token  first
-        resetRouter()
-        commit('RESET_STATE')
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
-
-  // remove token
-  resetToken({ commit }) {
-    return new Promise(resolve => {
-      removeToken() // must remove  token  first
-      commit('RESET_STATE')
-      resolve()
-    })
   }
+
 }
 
-export default {
-  // 命名空间是打开的，说明模块和模块之间是互通的
+export default{
+
   namespaced: true,
   state,
   mutations,
   actions
+
 }
+
 
